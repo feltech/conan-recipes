@@ -1,2 +1,5 @@
 /adaptivecpp/all/build/
 /adaptivecpp/all/test_package/build/
+/onemkl/all/build/
+/onemkl/all/test_package/build/
+CMakeUserPresets.json

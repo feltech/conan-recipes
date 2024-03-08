@@ -19,6 +19,8 @@ ninja/1.11.1
 [conf]
 tools.build:sysroot={{ os.getenv("CONDA_BUILD_SYSROOT") }}
 tools.cmake.cmaketoolchain:generator=Ninja
+tools.build:compiler_executables={"c": "{{ os.getenv("CONDA_PREFIX") }}/bin/clang", "cpp": "{{ os.getenv("CONDA_PREFIX") }}/bin/clang++"}
+
 
 # For bug in gettext (if needed somewhere as a build requirement) with Clang>=16
 # Alternative solution is to use libgettext (see below)

@@ -1,36 +1,30 @@
+#include <cassert>
+#include <iostream>
+
+#include <oneapi/mkl.hpp>
 #include <sycl/sycl.hpp>
 
 int main() {
-   sycl::float4 a = { 1.0, 2.0, 3.0, 4.0 };
-   sycl::float4 b = { 4.0, 3.0, 2.0, 1.0 };
-   sycl::float4 c = { 0.0, 0.0, 0.0, 0.0 };
 
-   sycl::default_selector device_selector;
+  std::vector<float> a = {1.f, 2.f, 3.f, 4.f, 5.f};
+  std::vector<float> b = {-1.f, 2.f, -3.f, 4.f, -5.f};
 
-   sycl::queue queue(device_selector);
-   std::cout << "Running on "
-             << queue.get_device().get_info<sycl::info::device::name>()
-             << "\n";
-   {
-      sycl::buffer<sycl::float4, 1> a_sycl(&a, sycl::range<1>(1));
-      sycl::buffer<sycl::float4, 1> b_sycl(&b, sycl::range<1>(1));
-      sycl::buffer<sycl::float4, 1> c_sycl(&c, sycl::range<1>(1));
-  
-      queue.submit([&] (sycl::handler& cgh) {
-         auto a_acc = a_sycl.get_access<sycl::access::mode::read>(cgh);
-         auto b_acc = b_sycl.get_access<sycl::access::mode::read>(cgh);
-         auto c_acc = c_sycl.get_access<sycl::access::mode::discard_write>(cgh);
+  sycl::context ctx;
+  sycl::device dev{sycl::gpu_selector_v};
+  sycl::queue q{ctx, dev};
+  {
+    sycl::buffer<float> buff_a(a.data(), a.size());
+    sycl::buffer<float> buff_b(b.data(), b.size());
 
-         cgh.single_task<class vector_addition>([=] () {
-         c_acc[0] = a_acc[0] + b_acc[0];
-         });
-      });
-   }
-   std::cout << "  A { " << a.x() << ", " << a.y() << ", " << a.z() << ", " << a.w() << " }\n"
-        << "+ B { " << b.x() << ", " << b.y() << ", " << b.z() << ", " << b.w() << " }\n"
-        << "------------------\n"
-        << "= C { " << c.x() << ", " << c.y() << ", " << c.z() << ", " << c.w() << " }"
-        << std::endl;
-		
-   return 0;
+    // NOTE: if a segfault happens here it's because the ERROR_MSG is nullptr,
+    // which means there are no enabled backend libraries.
+    oneapi::mkl::blas::column_major::axpy(q, static_cast<long>(a.size()), 1.0f,
+                                          buff_a, 1, buff_b, 1);
+  }
+  std::vector<float> expected = {0.f, 4.f, 0.f, 8.f, 0.f};
+
+  std::cout << "{" << b[0] << ", " << b[1] << ", " << b[2] << ", " << b[3]
+            << ", " << b[4] << "}\n";
+
+  return static_cast<int>(b != expected);
 }

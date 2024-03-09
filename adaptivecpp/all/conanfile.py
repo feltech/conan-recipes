@@ -52,11 +52,11 @@ class AdaptiveCppRecipe(ConanFile):
         deps = CMakeDeps(self)
         deps.generate()
         tc = CMakeToolchain(self)
+        tc.cache_variables["WITH_CUDA_BACKEND"] = True
+        tc.cache_variables["WITH_ROCM_BACKEND"] = False
+        tc.cache_variables["WITH_LEVEL_ZERO_BACKEND"] = False
+        tc.cache_variables["WITH_OPENCL_BACKEND"] = False
         tc.generate()
-        tc.variables["WITH_CUDA_BACKEND"] = True
-        tc.variables["WITH_ROCM_BACKEND"] = False
-        tc.variables["WITH_LEVEL_ZERO_BACKEND"] = False
-        tc.variables["WITH_OPENCL_BACKEND"] = False
 
     def build(self):
         cmake = CMake(self)
@@ -78,4 +78,5 @@ class AdaptiveCppRecipe(ConanFile):
             "lib/cmake/OpenSYCL/opensycl-config.cmake",
             "lib/cmake/AdaptiveCpp/adaptivecpp-config.cmake"
         ])
-        self.cpp_info.set_property("cmake_target_name", "AdaptiveCpp::conan")
+        self.cpp_info.set_property("cmake_target_name", "SYCL::SYCL")
+        # self.cpp_info.set_property("cmake_find_mode", "none")

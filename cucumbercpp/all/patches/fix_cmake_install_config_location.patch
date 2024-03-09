@@ -1,0 +1,18 @@
+Subject: [PATCH] Fix CMake install config location
+---
+Index: src/CMakeLists.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+--- a/src/CMakeLists.txt	(revision 7583400b7c467b7ad1f4ecae9bb8a6449a5738cf)
++++ b/src/CMakeLists.txt	(date 1709989555556)
+@@ -152,6 +152,6 @@
+ install(
+     EXPORT      CucumberCpp
+     NAMESPACE   CucumberCpp::
+-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake
++    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/CucumberCpp
+     FILE        CucumberCppConfig.cmake
+ )

@@ -1,0 +1,4 @@
+patches:
+- patch_file: "patches/fix_cmake_install_config_location.patch"
+- patch_file: "patches/fix_cmake_target_dependency_specification.patch"
+- patch_file: "patches/remove_werror.patch"

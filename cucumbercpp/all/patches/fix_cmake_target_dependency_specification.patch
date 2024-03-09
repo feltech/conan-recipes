@@ -1,0 +1,29 @@
+Subject: [PATCH] Fix CMake target dependency specification
+---
+Index: src/CMakeLists.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+--- a/src/CMakeLists.txt	(revision 7583400b7c467b7ad1f4ecae9bb8a6449a5738cf)
++++ b/src/CMakeLists.txt	(date 1709991822326)
+@@ -109,10 +109,17 @@
+             $<BUILD_INTERFACE:${TCLAP_INCLUDE_DIR}>
+             $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
+     )
++
++    find_package(Threads)  # For CMAKE_THREAD_LIBS_INIT
+     target_link_libraries(${TARGET}
+         PRIVATE
+             ${CUKE_EXTRA_PRIVATE_LIBRARIES}
+-            nlohmann_json::nlohmann_json
++            $<BUILD_INTERFACE:tclap::tclap>
++            $<BUILD_INTERFACE:asio::asio>
++            $<BUILD_INTERFACE:nlohmann_json::nlohmann_json>
++            # To avoid exposing asio in the public CMake package just for the sake of its transitive
++            # dependency on the system threads lib.
++            ${CMAKE_THREAD_LIBS_INIT}
+     )
+     # Don't export or import symbols for statically linked libraries
+     get_property(type TARGET ${TARGET} PROPERTY TYPE)

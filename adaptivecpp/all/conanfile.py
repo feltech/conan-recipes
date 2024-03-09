@@ -70,4 +70,12 @@ class AdaptiveCppRecipe(ConanFile):
         cmake.install()
 
     def package_info(self):
-        self.cpp_info.builddirs = [os.path.join(self.package_folder)]
+        self.cpp_info.builddirs = [self.package_folder]
+        # Add SYCL CMake config file, so that `find_package(SYCL) works (e.g. for oneMKL).
+        self.cpp_info.set_property("cmake_file_name", "SYCL")
+        self.cpp_info.set_property("cmake_build_modules", [
+            "lib/cmake/hipSYCL/hipsycl-config.cmake",
+            "lib/cmake/OpenSYCL/opensycl-config.cmake",
+            "lib/cmake/AdaptiveCpp/adaptivecpp-config.cmake"
+        ])
+        self.cpp_info.set_property("cmake_target_name", "AdaptiveCpp::conan")

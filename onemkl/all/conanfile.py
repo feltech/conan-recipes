@@ -71,6 +71,4 @@ class oneMKLRecipe(ConanFile):
 
     def package_info(self):
         self.cpp_info.builddirs = [self.package_folder]
-        self.cpp_info.set_property("cmake_file_name", "oneMKL")
-        self.cpp_info.set_property("cmake_build_modules", ["lib/cmake/oneMKL/oneMKLConfig.cmake"])
-        self.cpp_info.set_property("cmake_target_name", "oneMKL::conan")
+        self.cpp_info.set_property("cmake_find_mode", "none")

@@ -39,22 +39,6 @@ class CucumberCppRecipe(ConanFile):
         git.checkout(commit=self.version)
         apply_conandata_patches(self)
 
-        # Remove warnings-as-error.
-        # replace_in_file(self, os.path.join(self.source_folder, "CMakeLists.txt"), "-Werror",
-        #                 "")
-        # Fix dependency variables.
-        # replace_in_file(self, os.path.join(self.source_folder, "src", "CMakeLists.txt"),
-        #                 "ASIO_INCLUDE_DIR", "asio_INCLUDE_DIR")
-        # replace_in_file(self, os.path.join(self.source_folder, "src", "CMakeLists.txt"),
-        #                 "TCLAP_INCLUDE_DIR", "tclap_INCLUDE_DIR")
-        #
-        # # Fix CMake config install location
-        # replace_in_file(self, os.path.join(self.source_folder, "src", "CMakeLists.txt"),
-        #                 "    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake\n"
-        #                 "    FILE        CucumberCppConfig.cmake",
-        #                 "    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/CucumberCpp\n"
-        #                 "    FILE        CucumberCppConfig.cmake")
-        #
     def export_sources(self):
         copy(self, "patches/*", ".", self.export_sources_folder)
         copy(self, "CMakeLists.txt", self.folders.source, self.export_sources_folder)
@@ -83,10 +67,3 @@ class CucumberCppRecipe(ConanFile):
     def package_info(self):
         self.cpp_info.builddirs = [self.package_folder]
         self.cpp_info.set_property("cmake_find_mode", "none")
-        # TODO(DF): Make use of CMake 3.29's EXPORT_PACKAGE_DEPENDENCIES when its released
-        # replace_in_file(self, os.path.join(self.package_folder, "lib", "cmake", "CucumberCpp",
-        #                                    "CucumberCppConfig.cmake"),
-        #                 "unset(_cmake_expected_targets)\n",
-        #                 "unset(_cmake_expected_targets)\n"
-        #                 "include(CMakeFindDependencyMacro)\n"
-        #                 "find_dependency(nlohmann_json)\n")

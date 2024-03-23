@@ -11,6 +11,10 @@ os=Linux
 [buildenv]
 CC={{ os.getenv("CONDA_PREFIX") }}/bin/clang
 CXX={{ os.getenv("CONDA_PREFIX") }}/bin/clang++
+LD={{ os.getenv("CONDA_PREFIX") }}/bin/mold
+# oneMKL currently (3/2024) uses the deprecated FindCUDA.cmake module, which
+# doesn't look in this stubs directory without a hint.
+CUDA_LIB_PATH={{ os.getenv("CONDA_PREFIX") }}/lib/stubs
 
 [tool_requires]
 # Speed things up with Ninja

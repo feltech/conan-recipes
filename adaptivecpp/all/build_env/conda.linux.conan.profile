@@ -2,18 +2,17 @@
 arch=x86_64
 build_type=Release
 compiler=clang
-compiler.cppstd=20
+compiler.cppstd=23
 compiler.libcxx=libstdc++11
-# TODO(DF): Upgrade to clang 17 when https://github.com/conda-forge/clangdev-feedstock/issues/271
-compiler.version=15
+compiler.version=18
 os=Linux
 
 [buildenv]
 CC={{ os.getenv("CONDA_PREFIX") }}/bin/clang
 CXX={{ os.getenv("CONDA_PREFIX") }}/bin/clang++
 LD={{ os.getenv("CONDA_PREFIX") }}/bin/mold
-# oneMKL currently (3/2024) uses the deprecated FindCUDA.cmake module, which
-# doesn't look in this stubs directory without a hint.
+# The deprecated FindCUDA.cmake module doesn't look in this stubs directory
+# without a hint. Used e.g. by oneMKL.
 CUDA_LIB_PATH={{ os.getenv("CONDA_PREFIX") }}/lib/stubs
 
 [tool_requires]
